@@ -4,10 +4,15 @@ import Form from './components/Form/Form';
 import SearchBar from './components/SearchBar/SearchBar';
 
 function App() {
-	const [book, setBook] = useState(null);
+	const [book, setBook] = useState();
 	const [search, setSearch] = useState('');
 	const [bookList, setBookList] = useState(
-		fetchData('http://localhost:5000/searchAll')
+		fetchData('http://localhost:5000/searchAll', {
+			method: 'GET',
+			headers: {
+				Accept: 'application/json',
+			},
+		})
 	);
 
 	const handleSubmit = (e, data) => {
@@ -20,32 +25,62 @@ function App() {
 		setSearch(filter);
 	};
 
-	async function fetchData(url) {
-		const options = {
-			headers: {
-				Accept: 'application/json',
-			},
-		};
-
+	async function fetchData(url, options) {
 		const response = await fetch(url, options);
 		const data = await response.json();
-		return JSON.parse(data.body);
+		if (options.method === 'POST') {
+			return response;
+		} else {
+			return JSON.parse(data.body);
+		}
 	}
 
 	useEffect(() => {
 		let url = '';
+		const options = {
+			method: 'GET',
+			headers: {
+				Accept: 'application/json',
+			},
+		};
 		if (search.length === 0) {
 			url = `http://localhost:5000/searchAll`;
 		} else {
 			url = `http://localhost:5000/search/${search}`;
 		}
-		fetchData(url).then((data) => {
+		fetchData(url, options).then((data) => {
 			setBookList(data);
-			console.log(data);
 		});
 	}, [search]);
 
-	useEffect(() => {}, [book]);
+	useEffect(() => {
+		if (!book) return;
+		if (!book.title || !book.year || !book.cover || !book.author) {
+			alert('Todos los campos son requeridos');
+			return;
+		}
+		if (!parseInt(book.year)) {
+			alert('El año debe ser un numero entero');
+			return;
+		}
+
+		const url = 'http://localhost:5000/add';
+		const options = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(book),
+		};
+
+		fetchData(url, options).then((response) => {
+			if (response >= 300) {
+				alert('Error al registar el libro');
+			} else {
+				alert('Libro registrado');
+			}
+		});
+	}, [book]);
 
 	return (
 		<div>

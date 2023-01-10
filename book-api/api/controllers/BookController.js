@@ -32,6 +32,9 @@ class BookController {
 			response.status = search.status;
 			response.send(`<h1>Error: ${search.message}</h1>`);
 		} else {
+			response.set({
+				'Content-type': 'application/json',
+			});
 			response.end(JSON.stringify(search));
 		}
 	};
@@ -42,6 +45,9 @@ class BookController {
 			response.status = search.status;
 			response.send(`<h1>Error: ${search.message}</h1>`);
 		} else {
+			response.set({
+				'Content-type': 'application/json',
+			});
 			response.end(JSON.stringify(search));
 		}
 	};

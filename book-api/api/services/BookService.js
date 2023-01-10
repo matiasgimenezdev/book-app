@@ -2,9 +2,9 @@ const BookModel = require('../connection/BookConnection');
 
 class Book {
 	addBook = async (book) => {
-		const newBook = new BookModel(book);
 		console.log(book);
 		try {
+			const newBook = new BookModel(book);
 			await newBook.save();
 			return {
 				status: 200,
@@ -13,8 +13,8 @@ class Book {
 		} catch (error) {
 			console.log(error);
 			return {
-				status: 500,
-				message: 'Libro no encontrado',
+				status: 400,
+				message: error.message,
 			};
 		}
 	};
