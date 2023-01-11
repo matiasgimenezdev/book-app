@@ -49,6 +49,7 @@ function App() {
 			url = `http://localhost:5000/search/${search}`;
 		}
 		fetchData(url, options).then((data) => {
+			if (data === 'Libro no encontrado') return;
 			setBookList(data);
 		});
 	}, [search]);
@@ -74,7 +75,7 @@ function App() {
 		};
 
 		fetchData(url, options).then((response) => {
-			if (response >= 300) {
+			if (response !== 200) {
 				alert('Error al registar el libro');
 			} else {
 				alert('Libro registrado');

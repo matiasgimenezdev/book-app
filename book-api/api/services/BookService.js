@@ -1,73 +1,66 @@
-const BookModel = require('../connection/BookConnection');
+const Book = require('../models/Book');
 
-class Book {
-	addBook = async (book) => {
+class BookService {
+	add = async (book) => {
 		console.log(book);
 		try {
-			const newBook = new BookModel(book);
+			const newBook = new Book(book);
 			await newBook.save();
 			return {
 				status: 200,
 				message: 'Libro registrado',
 			};
 		} catch (error) {
-			console.log(error);
-			return {
-				status: 400,
-				message: error.message,
-			};
+			return error;
 		}
 	};
 
-	removeBook = async (title) => {
+	remove = async (title) => {
 		try {
-			await BookModel.deleteOne(title);
+			await Book.deleteOne(title);
 			console.log(title);
 			return {
 				status: 200,
 				message: 'Libro eliminado',
 			};
 		} catch (error) {
-			console.log(error);
-			return {
-				status: 500,
-				message: 'Libro no encontrado',
-			};
+			return error;
 		}
 	};
 
-	getAllBooks = async () => {
+	getAll = async () => {
 		try {
-			const books = await BookModel.find().exec();
-			return {
-				status: 200,
-				message: 'Libro encontrado',
-				body: JSON.stringify(books),
-			};
+			const books = await Book.find().exec();
+			if (books) {
+				return {
+					status: 200,
+					message: 'Libro encontrado',
+					body: JSON.stringify(books),
+				};
+			} else {
+				throw new Error('Libro no encontrado');
+			}
 		} catch (error) {
-			return {
-				status: 500,
-				message: 'Error en la busqueda',
-			};
+			return error;
 		}
 	};
 
-	getBook = async (filter) => {
+	get = async (filter) => {
 		try {
-			const book = await BookModel.findOne({ title: filter }).exec();
-			return {
-				status: 200,
-				message: 'Libro encontrado',
-				body: JSON.stringify([book]),
-			};
+			const book = await Book.findOne({ title: filter }).exec();
+			if (book) {
+				return {
+					status: 200,
+					message: 'Libro encontrado',
+					body: JSON.stringify([book]),
+				};
+			} else {
+				throw new Error('Libro no encontrado');
+			}
 		} catch (error) {
-			console.log(error);
-			return {
-				status: 500,
-				message: 'Libro no encontrado',
-			};
+			return error.message;
 		}
 	};
 }
 
-module.exports = Book;
+module.exports = BookService;

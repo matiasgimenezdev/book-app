@@ -1,12 +1,14 @@
-module.exports = (app) => {
-	const Book = require('./services/BookService');
+function routes(app) {
+	const BookService = require('./services/BookService');
 	const BookController = require('./controllers/BookController');
 
-	const BookInstance = new Book();
-	const BookControllerInstance = new BookController(BookInstance);
+	const BookServiceInstance = new BookService();
+	const BookControllerInstance = new BookController(BookServiceInstance);
 
-	app.get('/search/:title', BookControllerInstance.getBook);
-	app.get('/searchAll', BookControllerInstance.getAllBooks);
-	app.post('/add', BookControllerInstance.addBook);
-	app.post('/remove', BookControllerInstance.removeBook);
-};
+	app.get('/search/:title', BookControllerInstance.get);
+	app.get('/searchAll', BookControllerInstance.getAll);
+	app.post('/add', BookControllerInstance.add);
+	app.post('/remove', BookControllerInstance.remove);
+}
+
+module.exports = routes;

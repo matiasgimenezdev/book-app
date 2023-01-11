@@ -1,3 +1,4 @@
+const database = require('./connection/database');
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -7,6 +8,7 @@ const PORT = process.env.PORT || 5000;
 const HOST = process.env.HOST;
 const app = express();
 
+app.use(database);
 app.use(
 	cors({
 		origin: 'http://localhost:3000',

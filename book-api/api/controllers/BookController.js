@@ -1,36 +1,40 @@
 class BookController {
-	constructor(Book) {
-		this.BookService = Book;
+	constructor(BookService) {
+		this.BookService = BookService;
 	}
 
-	removeBook = (request, response) => {
-		const remove = this.BookService.removeBook(request.body);
-		console.log(request.body);
-		if (remove.status >= 400) {
-			response.status = remove.status;
-			response.send(`<h1>Error: ${remove.message}</h1>`);
-		} else {
-			response.end(JSON.stringify(remove));
-		}
-	};
+	add = (request, response) => {
+		const create = this.BookService.add(request.body);
 
-	addBook = (request, response) => {
-		const create = this.BookService.addBook(request.body);
-		console.log(request.body);
-		if (create.status >= 400) {
-			response.status = create.status;
-			response.send(`<h1>Error: ${create.message}</h1>`);
+		if (create.status !== 200) {
+			response.end(create);
 		} else {
+			response.set({
+				'Content-type': 'application/json',
+			});
 			response.end(JSON.stringify(create));
 		}
 	};
 
-	getBook = async (request, response) => {
+	remove = (request, response) => {
+		const remove = this.BookService.remove(request.body);
+
+		if (remove.status !== 200) {
+			response.end(remove);
+		} else {
+			response.set({
+				'Content-type': 'application/json',
+			});
+			response.end(JSON.stringify(remove));
+		}
+	};
+
+	get = async (request, response) => {
 		const title = request.params['title'].replace('+', '');
-		const search = await this.BookService.getBook(title);
-		if (search.status >= 400) {
-			response.status = search.status;
-			response.send(`<h1>Error: ${search.message}</h1>`);
+		const search = await this.BookService.get(title);
+
+		if (search.status !== 200) {
+			response.end(search);
 		} else {
 			response.set({
 				'Content-type': 'application/json',
@@ -39,11 +43,10 @@ class BookController {
 		}
 	};
 
-	getAllBooks = async (request, response) => {
-		const search = await this.BookService.getAllBooks();
-		if (search.status >= 400) {
-			response.status = search.status;
-			response.send(`<h1>Error: ${search.message}</h1>`);
+	getAll = async (request, response) => {
+		const search = await this.BookService.getAll();
+		if (search.status !== 200) {
+			response.end(search);
 		} else {
 			response.set({
 				'Content-type': 'application/json',
