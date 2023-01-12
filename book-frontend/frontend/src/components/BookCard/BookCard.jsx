@@ -1,17 +1,18 @@
 import React from 'react';
-import './Book.scss';
+import './BookCard.scss';
 
-const Book = () => {
+const BookCard = ({ data }) => {
+	const { title, author, year, cover } = data;
 	return (
-		<div>
-			<h2>Book Title</h2>
-			<div>
-				<h3>Book Author</h3>
-				<h3>Book Year</h3>
+		<div className='card'>
+			<h2 className='title'> {title}</h2>
+			<div className='desc'>
+				<h3>{author}</h3>
+				<h3>{year}</h3>
 			</div>
-			{/* <img src='${book.cover}' alt='${book.title}' class='image' /> */}
+			<img src={cover} alt={title} className='cover' />
 		</div>
 	);
 };
 
-export default Book;
+export default BookCard;

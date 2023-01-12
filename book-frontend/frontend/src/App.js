@@ -48,8 +48,11 @@ function App() {
 		}
 
 		fetchData(url, options).then((data) => {
-			console.log(data);
-			setBookList(data);
+			if (data !== 'Bad request') {
+				setBookList(data);
+			} else {
+				//TODO: ERROR MESSAGE DE QUE EL LIBRO NO SE HA ENCONTRADO
+			}
 		});
 	}, [search]);
 
@@ -74,7 +77,7 @@ function App() {
 		};
 
 		fetchData(url, options).then((response) => {
-			//TODO: Cada uno deberia cambiar una variable de estado error indicando si hay error o no
+			//TODO: Both have to show a message to indicate the user if the operation was succesfull or a failure
 			if (response.status !== 200) {
 				console.log(response.statusText);
 			} else {

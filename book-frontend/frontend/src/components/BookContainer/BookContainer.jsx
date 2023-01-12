@@ -1,12 +1,13 @@
 import React from 'react';
 import './BookContainer.scss';
+import BookCard from '../BookCard/BookCard';
 
 const BookContainer = ({ bookList }) => {
 	return (
-		<ul>
+		<ul className='main-container'>
 			{bookList.length > 0 ? (
 				bookList.map((value, index) => {
-					return <li key={index}>{value.title}</li>;
+					return <BookCard data={value} key={index} />;
 				})
 			) : (
 				<li>No hay Libros</li>

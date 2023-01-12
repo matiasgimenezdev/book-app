@@ -8,15 +8,15 @@ const SearchBar = ({ handleSearch }) => {
 	};
 
 	return (
-		<form onSubmit={(e) => handleSearch(e, filter)}>
+		<form className='bar' onSubmit={(e) => handleSearch(e, filter)}>
 			<input
+				className='filter'
 				name='filter'
 				id='filter'
 				type='text'
-				placeholder='Filter...'
 				onChange={handleChange}
 			/>
-			<input type='submit' value='Search' />
+			<input type='submit' className='search' value='Search' />
 		</form>
 	);
 };
