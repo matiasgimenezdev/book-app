@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-function database(req, res, next) {
+function database() {
 	mongoose
 		.connect('mongodb://localhost/book-app')
 		.then(() => {
@@ -9,7 +9,6 @@ function database(req, res, next) {
 		.catch((error) => {
 			console.log(error);
 		});
-	next();
 }
 
 module.exports = database;

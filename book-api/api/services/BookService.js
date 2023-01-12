@@ -6,12 +6,10 @@ class BookService {
 		try {
 			const newBook = new Book(book);
 			await newBook.save();
-			return {
-				status: 200,
-				message: 'Libro registrado',
-			};
+			return true;
 		} catch (error) {
-			return error;
+			console.log(error);
+			return false;
 		}
 	};
 
@@ -32,16 +30,13 @@ class BookService {
 		try {
 			const books = await Book.find().exec();
 			if (books) {
-				return {
-					status: 200,
-					message: 'Libro encontrado',
-					body: JSON.stringify(books),
-				};
+				return books;
 			} else {
-				throw new Error('Libro no encontrado');
+				return null;
 			}
 		} catch (error) {
-			return error;
+			console.log(error);
+			return null;
 		}
 	};
 
@@ -49,16 +44,13 @@ class BookService {
 		try {
 			const book = await Book.findOne({ title: filter }).exec();
 			if (book) {
-				return {
-					status: 200,
-					message: 'Libro encontrado',
-					body: JSON.stringify([book]),
-				};
+				return [book];
 			} else {
-				throw new Error('Libro no encontrado');
+				return null;
 			}
 		} catch (error) {
-			return error.message;
+			console.log(error);
+			return null;
 		}
 	};
 }

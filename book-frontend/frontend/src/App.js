@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import BookContainer from './components/BookContainer/BookContainer';
 import Form from './components/Form/Form';
 import SearchBar from './components/SearchBar/SearchBar';
-
 function App() {
 	const [book, setBook] = useState();
 	const [search, setSearch] = useState('');
@@ -27,11 +26,10 @@ function App() {
 
 	async function fetchData(url, options) {
 		const response = await fetch(url, options);
-		const data = await response.json();
 		if (options.method === 'POST') {
 			return response;
 		} else {
-			return JSON.parse(data.body);
+			return response.json();
 		}
 	}
 
@@ -48,8 +46,9 @@ function App() {
 		} else {
 			url = `http://localhost:5000/search/${search}`;
 		}
+
 		fetchData(url, options).then((data) => {
-			if (data === 'Libro no encontrado') return;
+			console.log(data);
 			setBookList(data);
 		});
 	}, [search]);
@@ -75,10 +74,11 @@ function App() {
 		};
 
 		fetchData(url, options).then((response) => {
-			if (response !== 200) {
-				alert('Error al registar el libro');
+			//TODO: Cada uno deberia cambiar una variable de estado error indicando si hay error o no
+			if (response.status !== 200) {
+				console.log(response.statusText);
 			} else {
-				alert('Libro registrado');
+				console.log(response.statusText);
 			}
 		});
 	}, [book]);

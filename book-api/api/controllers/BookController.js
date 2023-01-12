@@ -4,15 +4,26 @@ class BookController {
 	}
 
 	add = (request, response) => {
-		const create = this.BookService.add(request.body);
-
-		if (create.status !== 200) {
-			response.end(create);
-		} else {
+		const { body } = request;
+		if (body) {
+			const create = this.BookService.add(body);
 			response.set({
 				'Content-type': 'application/json',
 			});
-			response.end(JSON.stringify(create));
+			if (create) {
+				response.statusCode = 201;
+				response.body = JSON.stringify({ message: 'OK' });
+				response.end();
+			} else {
+				response.statusCode = 500;
+				response.body = JSON.stringify({
+					message: 'Internal server error',
+				});
+				response.end();
+			}
+		} else {
+			response.statusCode = 400;
+			response.end(JSON.stringify({ message: 'Bad request' }));
 		}
 	};
 
@@ -32,26 +43,38 @@ class BookController {
 	get = async (request, response) => {
 		const title = request.params['title'].replace('+', '');
 		const search = await this.BookService.get(title);
-
-		if (search.status !== 200) {
-			response.end(search);
+		response.set({
+			'Content-type': 'application/json',
+		});
+		if (search) {
+			response.statusCode = 200;
+			console.log(search);
+			response.send(JSON.stringify(search));
 		} else {
-			response.set({
-				'Content-type': 'application/json',
-			});
-			response.end(JSON.stringify(search));
+			response.statusCode = 400;
+			response.end(
+				JSON.stringify({
+					message: 'Bad request',
+				})
+			);
 		}
 	};
 
 	getAll = async (request, response) => {
 		const search = await this.BookService.getAll();
-		if (search.status !== 200) {
-			response.end(search);
+		response.set({
+			'Content-type': 'application/json',
+		});
+		if (search) {
+			response.statusCode = 200;
+			response.send(JSON.stringify(search));
 		} else {
-			response.set({
-				'Content-type': 'application/json',
-			});
-			response.end(JSON.stringify(search));
+			response.statusCode = 400;
+			response.end(
+				JSON.stringify({
+					message: 'Bad request',
+				})
+			);
 		}
 	};
 }

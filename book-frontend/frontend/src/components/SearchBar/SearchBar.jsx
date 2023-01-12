@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './SearchBar.scss';
 
 const SearchBar = ({ handleSearch }) => {
-	const [filter, setFilter] = useState('asd');
+	const [filter, setFilter] = useState('');
 	const handleChange = (event) => {
 		setFilter(event.target.value);
 	};
